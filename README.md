@@ -21,7 +21,7 @@ var myModule = angular.module('MyModule', ['angular.directives-chartjs-line']);
 
 Use the directive in your HTML files with the following code:
 ```html
-<div ang:chartjs:line data-chartjs-model="scopeVariableName"/>
+<div ang:chartjs:line data-chartjs-model="scopeVariableName"></div>
 ```
 ### Parameters
 - data-chartjs-model (string: required)

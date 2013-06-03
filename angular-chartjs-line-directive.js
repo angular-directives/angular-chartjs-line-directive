@@ -28,6 +28,7 @@ angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine'
         {key:'data-chartjs-scale-line-color', value:'scaleLineColor'},
         {key:'data-chartjs-scale-line-width', value:'scaleLineWidth', isNumber: true},
         {key:'data-chartjs-scale-show-labels', value:'scaleShowLabels', isBoolean: true},
+        {key:'data-chartjs-scale-label', value:'scaleLabel'},
         {key:'data-chartjs-scale-font-family', value:'scaleFontFamily'},
         {key:'data-chartjs-scale-font-size', value:'scaleFontSize', isNumber: true},
         {key:'data-chartjs-scale-font-style', value:'scaleFontStyle'},

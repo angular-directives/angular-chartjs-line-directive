@@ -1,0 +1,24 @@
+{
+  "name": "angular-chartjs-line-directive",
+  "main": "angular-chartjs-line-directive.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/angular-directives/angular-chartjs-line-directive",
+  "authors": [
+    "Stephane Begaudeau <stephane.begaudeau@obeo.fr>"
+  ],
+  "keywords": [
+    "chartjs"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chartjs": "~0.2.0"
+  }
+}

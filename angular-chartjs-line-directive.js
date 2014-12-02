@@ -5,87 +5,103 @@
  * Released under the MIT license
  */
 angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine', [function () {
-  var compilationFunction = function (templateElement, templateAttributes, transclude) {
-    if (templateElement.length === 1) {
-      var node = templateElement[0];
+  var getOptionsFromScope = function (scope) {
+    var options = {};
 
-      var width = node.getAttribute('data-chartjs-width') || '400';
-      var height = node.getAttribute('data-chartjs-height') || '400';
+    var potentialOptions = [
+      {key:'chartjsScaleOverlay', value:'scaleOverlay', isBoolean: true},
+      {key:'chartjsScaleOverride', value:'scaleOverride', isBoolean: true},
+      {key:'chartjsScaleSteps', value:'scaleSteps', isNumber: true},
+      {key:'chartjsScaleStepWidth', value:'scaleStepWidth', isNumber: true},
+      {key:'chartjsScaleStartValue', value:'scaleStartValue', isNumber: true},
+      {key:'chartjsScaleLineColor', value:'scaleLineColor'},
+      {key:'chartjsScaleLineWidth', value:'scaleLineWidth', isNumber: true},
+      {key:'chartjsScaleShowLabels', value:'scaleShowLabels', isBoolean: true},
+      {key:'chartjsScaleLabel', value:'scaleLabel'},
+      {key:'chartjsScaleFontFamily', value:'scaleFontFamily'},
+      {key:'chartjsScaleFontSize', value:'scaleFontSize', isNumber: true},
+      {key:'chartjsScaleFontStyle', value:'scaleFontStyle'},
+      {key:'chartjsScaleFontColor', value:'scaleFontColor'},
+      {key:'chartjsScaleShowGridLines', value:'scaleShowGridLines', isBoolean: true},
+      {key:'chartjsScaleGridLineColor', value:'scaleGridLineColor'},
+      {key:'chartjsScaleGridLineWidth', value:'scaleGridLineWidth', isNumber: true},
+      {key:'chartjsLineBezierCurve', value:'lineBezierCurve', isBoolean: true},
+      {key:'chartjsLinePointDot', value:'linePointDot', isBoolean: true},
+      {key:'chartjsLinePointDotRadius', value:'linePointDotRadius', isNumber: true},
+      {key:'chartjsLinePointDotWidth', value:'linePointDotStrokeWidth', isNumber: true},
+      {key:'chartjsLineDatasetStroke', value:'lineDatasetStroke', isBoolean: true},
+      {key:'chartjsLineDatasetStrokeWidth', value:'lineDatasetStrokeWidth', isNumber: true},
+      {key:'chartjsLineDatasetFill', value:'lineDatasetFill', isBoolean: true},
+      {key:'chartjsAnimation', value:'animation', isBoolean: true},
+      {key:'chartjsAnimationSteps', value:'animationSteps', isNumber: true},
+      {key:'chartjsAnimationEasing', value:'animationEasing'}
+    ];
 
-      var canvas = document.createElement('canvas');
-      canvas.setAttribute('width', width);
-      canvas.setAttribute('height', height);
-      canvas.setAttribute('data-chartjs-model', node.getAttribute('data-chartjs-model'));
-
-      var options = {};
-
-      var potentialOptions = [
-        {key:'data-chartjs-scale-overlay', value:'scaleOverlay', isBoolean: true},
-        {key:'data-chartjs-scale-override', value:'scaleOverride', isBoolean: true},
-        {key:'data-chartjs-scale-steps', value:'scaleSteps', isNumber: true},
-        {key:'data-chartjs-scale-step-width', value:'scaleStepWidth', isNumber: true},
-        {key:'data-chartjs-scale-start-value', value:'scaleStartValue', isNumber: true},
-        {key:'data-chartjs-scale-line-color', value:'scaleLineColor'},
-        {key:'data-chartjs-scale-line-width', value:'scaleLineWidth', isNumber: true},
-        {key:'data-chartjs-scale-show-labels', value:'scaleShowLabels', isBoolean: true},
-        {key:'data-chartjs-scale-label', value:'scaleLabel'},
-        {key:'data-chartjs-scale-font-family', value:'scaleFontFamily'},
-        {key:'data-chartjs-scale-font-size', value:'scaleFontSize', isNumber: true},
-        {key:'data-chartjs-scale-font-style', value:'scaleFontStyle'},
-        {key:'data-chartjs-scale-font-color', value:'scaleFontColor'},
-        {key:'data-chartjs-scale-show-grid-lines', value:'scaleShowGridLines', isBoolean: true},
-        {key:'data-chartjs-scale-grid-line-color', value:'scaleGridLineColor'},
-        {key:'data-chartjs-scale-grid-line-width', value:'scaleGridLineWidth', isNumber: true},
-        {key:'data-chartjs-bezier-curve', value:'bezierCurve', isBoolean: true},
-        {key:'data-chartjs-point-dot', value:'pointDot', isBoolean: true},
-        {key:'data-chartjs-point-dot-radius', value:'pointDotRadius', isNumber: true},
-        {key:'data-chartjs-point-dot-width', value:'pointDotStrokeWidth', isNumber: true},
-        {key:'data-chartjs-dataset-stroke', value:'datasetStroke', isBoolean: true},
-        {key:'data-chartjs-dataset-stroke-width', value:'datasetStrokeWidth', isNumber: true},
-        {key:'data-chartjs-dataset-fill', value:'datasetFill', isBoolean: true},
-        {key:'data-chartjs-animation', value:'animation', isBoolean: true},
-        {key:'data-chartjs-animation-steps', value:'animationSteps', isNumber: true},
-        {key:'data-chartjs-animation-easing', value:'animationEasing'}
-      ];
-
-      for (var i = 0; i < potentialOptions.length; i++) {
-        var aKey = node.getAttribute(potentialOptions[i].key);
-        if (aKey && potentialOptions[i].isBoolean) {
-          if ('true' === aKey) {
-            options[potentialOptions[i].value] = true;
-          } else if ('false' === aKey) {
-            options[potentialOptions[i].value] = false;
-          }
-        } else if (aKey && potentialOptions[i].isNumber) {
-          options[potentialOptions[i].value] = parseInt(aKey);
-        }else if (aKey) {
-          options[potentialOptions[i].value] = aKey;
-        }
+    for (var i = 0; i < potentialOptions.length; i++) {
+      if (scope.hasOwnProperty(potentialOptions[i].key) && scope[potentialOptions[i].key] !== undefined) {
+        options[potentialOptions[i].value] = scope[potentialOptions[i].key];
       }
+    }
 
-      var chart = new Chart(canvas.getContext('2d'));
-      node.parentNode.replaceChild(canvas, node);
+    return options;
+  };
 
-      return {
-        pre: function preLink(scope, instanceElement, instanceAttributes, controller) {
-          var expression = canvas.getAttribute('data-chartjs-model');
-          scope.$watch(expression, function (newValue, oldValue) {
-            var callback = scope[node.getAttribute('data-chartjs-on-animation-complete')];
-            if (callback !== undefined) {
-              options.onAnimationComplete = callback;
-            }
+  var chartjsBar = {
+    restrict: 'E',
+    //compile: compilationFunction,
+    template: '<canvas class="ang-chartjs-line"></canvas>',
+    scope: {
+      chartjsModel: '=',
+      chartjsWidth: '=',
+      chartjsHeight: '=',
+      chartjsScaleOverlay: '=',
+      chartjsScaleOverride: '=',
+      chartjsScaleSteps: '=',
+      chartjsScaleStepWidth: '=',
+      chartjsScaleStartValue: '=',
+      chartjsScaleLineColor: '=',
+      chartjsScaleLineWidth: '=',
+      chartjsScaleShowLabels: '=',
+      chartjsScaleLabel: '=',
+      chartjsScaleFontFamily: '=',
+      chartjsScaleFontSize: '=',
+      chartjsScaleFontStyle: '=',
+      chartjsScaleFontColor: '=',
+      chartjsScaleShowGridLine: '=',
+      chartjsScaleGridLineColor: '=',
+      chartjsScaleGridLineWidth: '=',
+      chartjsLineBezierCurve: '=',
+      chartjsLinePointDot: '=',
+      chartjsLinePointDotRadius: '=',
+      chartjsLineDatasetStroke: '=',
+      chartjsLineDatasetStrokeWidth: '=',
+      chartjsLineDatasetFill: '=',
+      chartjsAnimation: '=',
+      chartjsAnimationSteps: '=',
+      chartjsAnimationEasing: '='
+    },
+    link: function (scope, elements, attributes) {
+      scope.$watch('chartjsModel', function (newValue) {
+        if (newValue !== undefined) {
+          var options = getOptionsFromScope(scope);
 
+          if (scope.chart !== undefined) {
+            scope.chart.Line(newValue, options);
+          } else {
+            var width = scope.chartjsWidth || '400';
+            var height = scope.chartjsHeight || '400';
+
+            var canvas = elements[0].children[0];
+            canvas.setAttribute('width', width);
+            canvas.setAttribute('height', height);
+
+            var chart = new Chart(canvas.getContext('2d'));
             chart.Line(newValue, options);
-          }, true);
-        },
-        post: function postLink(scope, instanceElement, instanceAttributes, controller) {}
-      };
+            scope.chart = chart;
+          }
+        }
+      }, true);
     }
   };
-
-  var chartjsLine = {
-    compile: compilationFunction,
-    replace: true
-  };
-  return chartjsLine;
+  return chartjsBar;
 }]);

@@ -25,13 +25,13 @@ angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine'
       {key:'chartjsScaleShowGridLines', value:'scaleShowGridLines', isBoolean: true},
       {key:'chartjsScaleGridLineColor', value:'scaleGridLineColor'},
       {key:'chartjsScaleGridLineWidth', value:'scaleGridLineWidth', isNumber: true},
-      {key:'chartjsLineBezierCurve', value:'lineBezierCurve', isBoolean: true},
-      {key:'chartjsLinePointDot', value:'linePointDot', isBoolean: true},
-      {key:'chartjsLinePointDotRadius', value:'linePointDotRadius', isNumber: true},
-      {key:'chartjsLinePointDotWidth', value:'linePointDotStrokeWidth', isNumber: true},
-      {key:'chartjsLineDatasetStroke', value:'lineDatasetStroke', isBoolean: true},
-      {key:'chartjsLineDatasetStrokeWidth', value:'lineDatasetStrokeWidth', isNumber: true},
-      {key:'chartjsLineDatasetFill', value:'lineDatasetFill', isBoolean: true},
+      {key:'chartjsBezierCurve', value:'bezierCurve', isBoolean: true},
+      {key:'chartjsPointDot', value:'pointDot', isBoolean: true},
+      {key:'chartjsPointDotRadius', value:'pointDotRadius', isNumber: true},
+      {key:'chartjsPointDotWidth', value:'pointDotStrokeWidth', isNumber: true},
+      {key:'chartjsDatasetStroke', value:'datasetStroke', isBoolean: true},
+      {key:'chartjsDatasetStrokeWidth', value:'datasetStrokeWidth', isNumber: true},
+      {key:'chartjsDatasetFill', value:'datasetFill', isBoolean: true},
       {key:'chartjsAnimation', value:'animation', isBoolean: true},
       {key:'chartjsAnimationSteps', value:'animationSteps', isNumber: true},
       {key:'chartjsAnimationEasing', value:'animationEasing'}
@@ -46,7 +46,7 @@ angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine'
     return options;
   };
 
-  var chartjsBar = {
+  var chartjsLine = {
     restrict: 'E',
     //compile: compilationFunction,
     template: '<canvas class="ang-chartjs-line"></canvas>',
@@ -70,12 +70,12 @@ angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine'
       chartjsScaleShowGridLine: '=',
       chartjsScaleGridLineColor: '=',
       chartjsScaleGridLineWidth: '=',
-      chartjsLineBezierCurve: '=',
-      chartjsLinePointDot: '=',
-      chartjsLinePointDotRadius: '=',
-      chartjsLineDatasetStroke: '=',
-      chartjsLineDatasetStrokeWidth: '=',
-      chartjsLineDatasetFill: '=',
+      chartjsBezierCurve: '=',
+      chartjsPointDot: '=',
+      chartjsPointDotRadius: '=',
+      chartjsDatasetStroke: '=',
+      chartjsDatasetStrokeWidth: '=',
+      chartjsDatasetFill: '=',
       chartjsAnimation: '=',
       chartjsAnimationSteps: '=',
       chartjsAnimationEasing: '='
@@ -103,5 +103,5 @@ angular.module('angular.directives-chartjs-line', []).directive('angChartjsLine'
       }, true);
     }
   };
-  return chartjsBar;
+  return chartjsLine;
 }]);
